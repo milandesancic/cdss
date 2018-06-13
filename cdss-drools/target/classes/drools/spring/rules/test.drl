@@ -1,0 +1,10 @@
+//created on: Jun 14, 2018
+package drools.spring.rules
+
+rule "Your First Rule"
+
+    when
+        //conditions
+    then
+        System.out.println("Milan");
+end
