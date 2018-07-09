@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import rs.uns.ac.ftn.cdss.dto.DoctorDto;
+
 @Entity
 @Table(name = "cdss_user")
 public class User {
@@ -45,6 +47,14 @@ public class User {
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.role = role;
+	}
+	
+	public User(DoctorDto doctor) {
+		this.username = doctor.getUsername();
+		this.password = doctor.getPassword();
+		this.firstname = doctor.getFirstname();
+		this.lastname = doctor.getLastname();
+		this.role = UserRole.DOCTOR;
 	}
 
 	public Long getId() {
