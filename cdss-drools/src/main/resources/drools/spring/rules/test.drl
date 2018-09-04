@@ -4,27 +4,6 @@ package drools.spring.rules
 import rs.uns.ac.ftn.cdss.dto.SymptomDto;
 import rs.uns.ac.ftn.cdss.dto.Symptoms;
 
-rule "Prehlada rules"
-
-    when
-        Symptoms($symptoms : symptoms)	
-        $count_s : Number() from accumulate(
-        forall(
-        	SymptomDto() from $symptoms
-        	
-        	),
-        	init (int count = 0;),
-        	action(count += 1;),
-        	reverse(count -= 1;),
-        	result(count)
-        	)
-    then
-        System.out.println("pravilo 1");
-        System.out.println("Broj simptoma "+$count_s);
-           
-end
-
-
 
 rule "Your 2 Rule"
 
