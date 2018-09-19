@@ -1,80 +1,96 @@
 package rs.uns.ac.ftn.cdss.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "patient")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Patient {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private long id;
-	
-	@OneToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="record_id")
-	private Record record;
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-	@Column(name = "firstname")
-	private String firstname;
+	@Column(nullable = false)
+	private String name;
+	@Column(nullable = false)
+	private String lastName;
 
-	@Column(name = "lastname")
-	private String lastname;
-	
-	/**
-	 * DODATI NA STA JE PACIJENT ALERGICAN
-	 */
-	
+	@OneToMany(fetch = FetchType.EAGER)
+	private Set<Record> patientHistory = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Medicine> medicineAllergies = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<MedicineComponent> componentAllergies = new HashSet<>();
+
 	public Patient() {
+
 	}
 
-	public Patient(long id, Record record, String firstname, String lastname) {
-		super();
-		this.id = id;
-		this.record = record;
-		this.firstname = firstname;
-		this.lastname = lastname;
+	public Patient(long l, String name) {
+		this.id = l;
+		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public Record getRecord() {
-		return record;
+	public String getName() {
+		return name;
 	}
 
-	public void setRecord(Record record) {
-		this.record = record;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public Set<Record> getPatientHistory() {
+		return patientHistory;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setPatientHistory(Set<Record> patientHistory) {
+		this.patientHistory = patientHistory;
 	}
 
-	
+	public Set<Medicine> getMedicineAllergies() {
+		return medicineAllergies;
+	}
+
+	public void setMedicineAllergies(Set<Medicine> medicineAllergies) {
+		this.medicineAllergies = medicineAllergies;
+	}
+
+	public Set<MedicineComponent> getComponentAllergies() {
+		return componentAllergies;
+	}
+
+	public void setComponentAllergies(Set<MedicineComponent> componentAllergies) {
+		this.componentAllergies = componentAllergies;
+	}
+
 }

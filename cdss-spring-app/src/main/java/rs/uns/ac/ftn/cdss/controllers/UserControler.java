@@ -2,7 +2,6 @@ package rs.uns.ac.ftn.cdss.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.kie.api.runtime.KieContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import rs.uns.ac.ftn.cdss.CdssSpringAppApplication;
 import rs.uns.ac.ftn.cdss.dto.AuthenticationRequestDto;
 import rs.uns.ac.ftn.cdss.dto.AuthenticationResponseDto;
 import rs.uns.ac.ftn.cdss.dto.DoctorDto;
 import rs.uns.ac.ftn.cdss.model.User;
-import rs.uns.ac.ftn.cdss.model.UserRole;
 import rs.uns.ac.ftn.cdss.security.TokenUtils;
 import rs.uns.ac.ftn.cdss.service.AdminService;
 import rs.uns.ac.ftn.cdss.service.UserService;
@@ -40,23 +37,23 @@ public class UserControler {
 
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody AuthenticationRequestDto authenticationRequest) {
-		User u = userService.getByUsername(authenticationRequest.getUsername());
-		if (u == null) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		} else {
-			String token = tokeUtils.generateToken(u);
-			System.out.println(token);
-			AuthenticationResponseDto respnse = new AuthenticationResponseDto(token, u.getId(), u.getUsername(),
-					u.getRole());
-			// Add kieSession if user not admin
 
-			if (u.getRole() != UserRole.ADMIN)
-				CdssSpringAppApplication.kieSessions.putIfAbsent(u.getUsername(),
-						CdssSpringAppApplication.getKieSession());
-			return new ResponseEntity<>(respnse, HttpStatus.OK);
-
+		Boolean response = userService.login(authenticationRequest);
+		if (!response) {
+			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}
+		
+		User u = userService.getByUsername(authenticationRequest.getUsername());
+		String token = tokeUtils.generateToken(u);
+		System.out.println(token);
+		AuthenticationResponseDto respnse = new AuthenticationResponseDto(token, u.getId(), u.getUsername(),
+				u.getRole());
+		
+		return new ResponseEntity<>(respnse, HttpStatus.OK);
+
 	}
+
+	//TODO: Logout
 
 	@GetMapping
 	public void printUsername() {
