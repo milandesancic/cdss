@@ -6,4 +6,5 @@ import rs.uns.ac.ftn.cdss.model.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, Long>{
 
+
 }

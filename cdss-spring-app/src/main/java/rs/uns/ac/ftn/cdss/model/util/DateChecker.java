@@ -1,4 +1,4 @@
-package rs.uns.ac.ftn.cdss.model;
+package rs.uns.ac.ftn.cdss.model.util;
 
 import java.util.Calendar;
 import java.util.Date;

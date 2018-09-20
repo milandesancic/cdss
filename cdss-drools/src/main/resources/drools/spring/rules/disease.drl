@@ -131,9 +131,38 @@ rule "Sinusna infekcija"
 end
 
 
+/**DRUGA GRUPA**/
 
-
-
+rule "Hipertenzija"
+	no-loop
+	lock-on-active
+	salience 20
+	when
+		$dc : DateChecker() 
+		$d: Disease(name == "Hipertenzija")
+		$patient: Patient($patientHistory: patientHistory)
+		$mr: Record($symptoms: symptoms, disease == null)
+		
+		// preuzmemo sve simptome iz bolesti u predhodnih 6 meseci
+		$oldSymptoms: List() from accumulate(
+			Record($dc.last6Months()<date, $currSymptoms: symptoms) from $patientHistory,
+			init(List symptomList = new ArrayList<>();),
+			action(symptomList.addAll($currSymptoms);)
+			result(symptomList)
+		)
+		
+		
+		$symptomNum: Number(intValue >= 10) from accumulate(
+			Symptom(name == "Visok krvni pritisak") from $oldSymptoms,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		)
+			
+	then
+		modify($mr) {setDisease($d);}
+		System.out.println("Person suffering from hypertension! #: "+$symptomNum);
+end
 
 
 

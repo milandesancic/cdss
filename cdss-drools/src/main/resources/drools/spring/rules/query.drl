@@ -1,0 +1,27 @@
+package drools.spring.rules
+
+import rs.uns.ac.ftn.cdss.model.*;
+
+query "Bolesti po simptomima" (List symptomList)
+		disease : Disease($diseaseSymptoms : symptoms)
+		$symptoms : List() from accumulate (
+				$sym:Symptom($sName:name) from $diseaseSymptoms,
+				collectList($sName)
+				)
+		numOfSym : Number(intValue>=1) from accumulate( 
+          $symptom: Symptom(name memberOf $symptoms) from symptomList,
+          count($symptom)
+        )
+end
+
+
+query "Simptomi bolesti" (Disease $disease)
+		generalSymptoms : List() from accumulate (
+				$gSymptom:Symptom(symptomType==SymptomType.GENERAL) from $disease.symptoms,
+				collectList($gSymptom)
+				)
+		specificSymptoms : List() from accumulate (
+				$sSymptom:Symptom(symptomType==SymptomType.SPECIFIC) from $disease.symptoms,
+				collectList($sSymptom)
+				)		
+end

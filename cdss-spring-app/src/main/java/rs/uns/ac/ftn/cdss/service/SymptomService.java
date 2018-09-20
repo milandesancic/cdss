@@ -1,9 +1,7 @@
 package rs.uns.ac.ftn.cdss.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
-import rs.uns.ac.ftn.cdss.model.Disease;
 import rs.uns.ac.ftn.cdss.model.Symptom;
 
 public interface SymptomService {
@@ -12,6 +10,6 @@ public interface SymptomService {
 	
 //	Collection<Symptom> getAll();
 	
-	ArrayList<Symptom> getSymptomsByDisease(Disease disease, String username);
+	ArrayList<Symptom> getSymptomsByDisease(Long disease, String username);
 
 }

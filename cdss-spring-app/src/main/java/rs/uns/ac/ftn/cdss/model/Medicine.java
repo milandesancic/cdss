@@ -34,9 +34,6 @@ public class Medicine {
 	@ManyToOne
 	private User doctor;
 
-	@Column
-	private Boolean deleted;
-
 	public Medicine() {
 
 	}
@@ -63,14 +60,6 @@ public class Medicine {
 
 	public void setMedicineType(MedicineType medicineType) {
 		this.medicineType = medicineType;
-	}
-
-	public Boolean getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(Boolean deleted) {
-		this.deleted = deleted;
 	}
 
 	public String getName() {

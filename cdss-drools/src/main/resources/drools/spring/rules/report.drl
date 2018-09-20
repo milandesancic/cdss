@@ -1,0 +1,64 @@
+package drools.spring.rules
+
+
+import rs.uns.ac.ftn.cdss.model.*;
+import rs.uns.ac.ftn.cdss.model.util.*;
+
+
+query "Pacijent sa hronicnom bolescu koja nije prehlada ili groznica"
+	p : Patient($id : id, $history : patientHistory)
+	d : Disease(name != "Prehlada", name != "Groznica", $dName : name)
+	$dc : DateChecker() 
+	list : List(size>5) from accumulate (
+		$r : Record(disease.name==$dName && $dc.last2Years()<date) from $history,
+		collectList($r)
+	)
+end
+
+
+query "Zavisnik"
+	p : Patient($id : id, $history : patientHistory)
+    $dc : DateChecker() 
+    $m: Medicine (medicineType==MedicineType.ANALGETIC)
+    recordsList : List(size>=6) from accumulate (
+		$mr : Record($dc.last6Months()<date, $medList:medicine) from $history
+		and
+		Medicine (medicineType==MedicineType.ANALGETIC) from $medList,
+        collectList( $mr )
+    )		
+	doctorsList :Set(size>=3) from accumulate(
+		$d : Record($doctor : doctor) from recordsList,
+		collectSet($doctor)
+	)        	
+end
+
+
+
+query "Slab imunitet"
+	p : Patient($id : id, $history : patientHistory)
+	$dc : DateChecker()
+	recordsList : List(size>=10) from accumulate (
+		$mr : Record($dc.last12Months()<date) from $history,
+        collectList( $mr )
+    )
+    
+    diseasesList :Set(size>=2) from accumulate(
+		$d : Record($disease : disease) from recordsList,
+		collectSet($disease)
+	)
+	 
+	medicinesList : List() from accumulate(
+    	$m : Record($medicines: medicine) from recordsList,
+    	init( List list = new ArrayList(); )
+        action(list.addAll($m.getMedicine()); )
+        result( list ) )
+    
+    antibioticsList : List() from accumulate(
+    	$a : Medicine( medicineType == MedicineType.ANTIBIOTIC) from medicinesList,
+    	collectList($a)
+    )
+	eval(medicinesList.size()==antibioticsList.size())
+    
+   
+end
+
