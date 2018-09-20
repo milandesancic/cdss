@@ -55,4 +55,11 @@ public class Disease {
 		this.symptoms = symptoms;
 	}
 
+	@Override
+	public String toString() {
+		return "Disease [id=" + id + ", name=" + name + "]";
+	}
+	
+	
+
 }

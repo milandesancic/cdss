@@ -1,0 +1,165 @@
+package drools.spring.rules
+
+import rs.uns.ac.ftn.cdss.model.*;
+import rs.uns.ac.ftn.cdss.model.util.*;
+import java.util.*;
+
+agenda-group "diseases-group"
+
+rule "Prehlada"
+	no-loop
+	lock-on-active true
+	salience ($sdc.getSalience()/$sdc.getMaxSymptomNum()*100)
+	when
+		$d : Disease( name == "Prehlada" )
+		$mr : Record (disease == null , $symptoms: symptoms)
+		$sdc : SalienceChecker( $s : salience>=4 ) from accumulate(
+			$symptom : Symptom (
+				name == "Curenje iz nosa" ||
+				name == "Bol u grlu" ||
+				name == "Glavobolja" ||
+				name == "Kijanje" ||
+				name == "Kasalj"
+			) from $symptoms,		
+            init(SalienceChecker $salCheck = new SalienceChecker(5);),
+            action($salCheck.addSymptom();),
+            result($salCheck)
+			
+		)
+	then
+		modify($mr) {setDisease($d);} 
+		System.out.println("Prehlada: satisfied " + $sdc.getSalience() + " symptoms.");
+end
+
+
+rule "Groznica"
+	no-loop
+	lock-on-active true
+	salience ($sdc.getSalience()/$sdc.getMaxSymptomNum()*100)
+	when
+		$d : Disease( name == "Groznica" )
+		$mr : Record (disease == null , $symptoms: symptoms)
+		$sdc : SalienceChecker( $s : salience>=4 ) from accumulate(
+			$symptom : Symptom (
+				name == "Curenje iz nosa" ||
+				name == "Bol u grlu" ||
+				name == "Glavobolja" ||
+				name == "Kijanje" ||
+				name == "Kasalj" ||
+				name == "Drhtavica"||
+				(name == "Temperatura" && value>38)
+			) from $symptoms,		
+            init(SalienceChecker $salCheck = new SalienceChecker(7);),
+            action($salCheck.addSymptom();),
+            result($salCheck)
+		)
+	then
+		modify($mr) {setDisease($d);} 
+		System.out.println("Groznica: satisfied " + $sdc.getSalience() + " out of " + $sdc.getMaxSymptomNum() + " symptoms.");
+end
+
+
+rule "Upala krajnika"
+	no-loop
+	lock-on-active true
+	salience ($sdc.getSalience()/$sdc.getMaxSymptomNum()*100)
+	when
+		$d : Disease( name == "Upala krajnika" )
+		$mr : Record (disease == null , $symptoms: symptoms)
+		$sdc : SalienceChecker( $s : salience>=4 ) from accumulate(
+			$symptom : Symptom (
+				name == "Bol u grlu" ||
+				name == "Glavobolja" ||
+				name == "Drhtavica" ||
+				(name == "Temperatura" && value>=40 && value<=41) ||
+				name == "Bol koji se siri do usiju" ||
+				name == "Gubitak apetita" ||
+				name == "Umor" ||
+				name == "Zuti sekret iz nosa"
+				
+			) from $symptoms,			
+            init(SalienceChecker $salCheck = new SalienceChecker(8);),
+            action($salCheck.addSymptom();),
+            result($salCheck)
+			
+		)
+	then
+		modify($mr) {setDisease($d);} 
+		System.out.println("Upala krajnika: satisfied " + $sdc.getSalience() + " out of " + $sdc.getMaxSymptomNum() + " symptoms.");
+end
+
+
+
+rule "Sinusna infekcija"
+	no-loop
+	lock-on-active true
+	salience ($sdc.getSalience()/$sdc.getMaxSymptomNum()*100)
+	when
+		$dc : DateChecker() 
+		$d : Disease( name == "Sinusna infekcija" )
+		$patient : Patient(  $patientHistory : patientHistory )
+		$mr : Record (disease == null , $symptoms: symptoms)
+		
+		
+		//Pacijent treba da ima Groznicu ili Prehlad u poslednjih 60 dana
+		Number(intValue >= 1) from accumulate (
+			$oldDiag: Record( disease.name=="Prehlada" || disease.name=="Groznica", $dc.last60Days()<date ) from $patientHistory,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		)
+		
+		$sdc : SalienceChecker( $s : salience>=3 ) from accumulate(
+			$symptom : Symptom (
+				name == "Oticanje oko ociju" ||
+				name == "Glavobolja" ||
+				name == "Zuti sekret iz nosa" ||
+				name == "Bol u grlu" ||
+				(name == "Temperatura" && value>38) ||
+				name == "Kasalj"
+				
+			) from $symptoms,			
+            init(SalienceChecker $salCheck = new SalienceChecker(6);),
+            action($salCheck.addSymptom();),
+            result($salCheck)
+			
+		)
+
+	then
+		modify($mr) {setDisease($d);}
+		System.out.println("Sinusna infekcija: satisfied " + ($sdc.getSalience()+1) + " out of " + ($sdc.getMaxSymptomNum()+1) + " symptoms.");
+end
+
+
+
+
+
+
+
+
+
+rule "Dijabetes"
+    no-loop
+	lock-on-active true
+	salience 100
+    when
+        $d : Disease( name == "Dijabetes")
+		$mr : Record (disease == null , $symptoms: symptoms)
+		Number(intValue==4) from accumulate(
+            $symptom: Symptom(
+            	name == "Cesto uriniranje"	||
+            	name == "Gubitak telesne tezine" 	||
+            	name == "Zamor"	 ||
+            	name == "Mucnina i povracanje" 	  		 		  		 	
+            ) from $symptoms,
+            init(int count = 0;),
+            action(count++;),
+            result(count)
+        )
+				
+	then
+		modify($mr) {setDisease($d);}
+		System.out.println("Bolest Dijabetes.");
+
+end
+

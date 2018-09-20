@@ -106,3 +106,13 @@ insert into cdss_db.disease_symptoms(disease_id,symptoms_id) value (8,14);
 insert into cdss_db.disease_symptoms(disease_id,symptoms_id) value (8,18);
 insert into cdss_db.disease_symptoms(disease_id,symptoms_id) value (8,17);
 insert into cdss_db.disease_symptoms(disease_id,symptoms_id) value (8,21);
+
+
+--Dodavanje pacijenta
+insert into cdss_db.patient(id,last_name,first_name) value (1,"Peric","Pera");
+insert into cdss_db.patient(id,last_name,first_name) value (2,"Mikic","Mika");
+
+
+--Dodavanje bolesti
+insert into cdss_db.patient_record(id,date,disease_id,doctor_id) value(1,'2018-08-15',1,2);
+insert into cdss_db.patient_patient_history(patient_id,patient_history_id) value (1,1);

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import rs.uns.ac.ftn.cdss.CdssSpringAppApplication;
 import rs.uns.ac.ftn.cdss.dto.AuthenticationRequestDto;
 import rs.uns.ac.ftn.cdss.dto.AuthenticationResponseDto;
 import rs.uns.ac.ftn.cdss.dto.DoctorDto;
@@ -48,6 +49,7 @@ public class UserControler {
 		System.out.println(token);
 		AuthenticationResponseDto respnse = new AuthenticationResponseDto(token, u.getId(), u.getUsername(),
 				u.getRole());
+		System.out.println("Broj ulogovanih korniska:" + CdssSpringAppApplication.kieSessions.size());
 		
 		return new ResponseEntity<>(respnse, HttpStatus.OK);
 

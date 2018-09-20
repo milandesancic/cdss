@@ -22,9 +22,9 @@ public class Patient {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false,name="first_name")
 	private String name;
-	@Column(nullable = false)
+	@Column(nullable = false,name="last_name")
 	private String lastName;
 
 	@OneToMany(fetch = FetchType.EAGER)
@@ -92,5 +92,13 @@ public class Patient {
 	public void setComponentAllergies(Set<MedicineComponent> componentAllergies) {
 		this.componentAllergies = componentAllergies;
 	}
+
+	@Override
+	public String toString() {
+		return "Patient [id=" + id + ", name=" + name + ", lastName=" + lastName + ", patientHistory=" + patientHistory
+				+ ", medicineAllergies=" + medicineAllergies + ", componentAllergies=" + componentAllergies + "]";
+	}
+	
+	
 
 }
