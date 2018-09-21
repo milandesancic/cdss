@@ -232,13 +232,13 @@ insert into cdss_db.patient_component_allergies(patient_id,component_allergies_i
 
 
 --Dodavanje leka na bolest
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (2,1);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (3,2);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (4,3);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (5,1);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (6,1);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (7,2);
-insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (8,2);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (2,1);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (3,2);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (4,3);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (5,1);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (6,1);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (7,2);
+--insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (8,2);
 
 insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (2,4);
 insert into cdss_db.patient_record_medicine(record_id,medicine_id) value (3,5);

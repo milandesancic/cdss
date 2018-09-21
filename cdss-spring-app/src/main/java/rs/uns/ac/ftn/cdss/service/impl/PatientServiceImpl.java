@@ -99,7 +99,6 @@ public class PatientServiceImpl implements PatientService {
 
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Set<Patient> getPatientsWithWeakImmunity(String username) {
 		KieSession kieSession = CdssSpringAppApplication.kieSessions.get(username);
@@ -120,11 +119,9 @@ public class PatientServiceImpl implements PatientService {
 		ArrayList<Patient> foundPatients=new ArrayList<>();
 		for ( QueryResultsRow row : results ) {
 		 	Patient p = ( Patient ) row.get( "p" );
-		 	Collection<Medicine> med=(Collection<Medicine>) row.get("medicinesList");
-		 	System.err.println("medlist "+med.size());
-		 	Collection<Medicine> ant=(Collection<Medicine>) row.get("antibioticsList");
-		 	System.err.println("antlist "+ant.size());
-		 	
+//		 	Collection<Medicine> med=(Collection<Medicine>) row.get("medicinesList");
+//		 	Collection<Medicine> ant=(Collection<Medicine>) row.get("antibioticsList");
+//		 	
 			foundPatients.add(p);
 		}
 		release(kieSession);
