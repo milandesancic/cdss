@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,7 @@ import rs.uns.ac.ftn.cdss.model.Record;
 import rs.uns.ac.ftn.cdss.model.Symptom;
 import rs.uns.ac.ftn.cdss.model.util.DateChecker;
 import rs.uns.ac.ftn.cdss.model.util.SalienceChecker;
+import rs.uns.ac.ftn.cdss.repository.DiseaseRepository;
 import rs.uns.ac.ftn.cdss.repository.PatientRepository;
 import rs.uns.ac.ftn.cdss.repository.SymptomRepository;
 import rs.uns.ac.ftn.cdss.service.DiseaseService;
@@ -33,6 +35,9 @@ public class DiseaseServiceImpl implements DiseaseService {
 
 	@Autowired
 	PatientRepository patientRepository;
+	
+	@Autowired
+	DiseaseRepository diseaseRepository;
 
 	@Override
 	public Record getDiseaseBySymptoms(Long id, ArrayList<Symptom> symptoms, String username) {
@@ -113,6 +118,12 @@ public class DiseaseServiceImpl implements DiseaseService {
 			if (!object.getClass().equals(Disease.class))
 				kieSession.delete(kieSession.getFactHandle(object));
 		}
+	}
+
+
+	@Override
+	public List<Disease> getAll() {
+		return this.diseaseRepository.findAll();
 	}
 
 

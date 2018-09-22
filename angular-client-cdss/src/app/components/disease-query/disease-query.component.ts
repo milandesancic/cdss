@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { QueryResultsService } from '../../service/query-results.service';
 
 @Component({
-  selector: 'app-report-details',
-  templateUrl: './report-details.component.html',
-  styleUrls: ['./report-details.component.css']
+  selector: 'app-disease-query',
+  templateUrl: './disease-query.component.html',
+  styleUrls: ['./disease-query.component.css']
 })
-export class ReportDetailsComponent implements OnInit {
+export class DiseaseQueryComponent implements OnInit {
 
-  data
+  data;
+
   constructor(private queryData:QueryResultsService) { }
 
   ngOnInit() {

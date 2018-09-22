@@ -16,6 +16,9 @@ import { PatientComponent } from './components/patient/patient.component';
 import { QueryComponent } from './components/query/query.component';
 import { ReportComponent } from './components/report/report.component';
 import { ReportDetailsComponent } from './components/report-details/report-details.component';
+import { SymptomQueryComponent } from './components/symptom-query/symptom-query.component';
+import { DiseaseQueryComponent } from './components/disease-query/disease-query.component';
+
 
 
 const appRoutes: Routes = [
@@ -30,7 +33,8 @@ const appRoutes: Routes = [
   { path: 'patient', component: PatientComponent, canActivate: [OnlyLoggedInGuard] },
   { path: 'query', component: QueryComponent, canActivate: [OnlyLoggedInGuard] },
   { path: 'report', component: ReportComponent, canActivate: [OnlyLoggedInGuard] },
-  { path: 'report/details', component: ReportDetailsComponent, canActivate: [OnlyLoggedInGuard] }
+  { path: 'query/symptoms', component: SymptomQueryComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'query/disease', component: DiseaseQueryComponent, canActivate: [OnlyLoggedInGuard] }
 ];
 
 
@@ -44,7 +48,9 @@ const appRoutes: Routes = [
     PatientComponent,
     QueryComponent,
     ReportComponent,
-    ReportDetailsComponent
+    ReportDetailsComponent,
+    SymptomQueryComponent,
+    DiseaseQueryComponent,
   ],
   imports: [
     BrowserModule,

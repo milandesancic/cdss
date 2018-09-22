@@ -4,16 +4,15 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class SymptomService {
+export class DiseaseService {
 
   constructor(private http:HttpClient) { }
 
-
   getAll(){
-    return this.http.get('/api/symptoms');
+    return this.http.get('/api/diseases');
   }
 
-  getByDisease(id:number){
-    return this.http.get(`/api/symptoms/get_by_disease/${id}`);
+  getBySymptoms(data){
+    return this.http.post('/api/diseases/get_by_symptoms',data);
   }
 }

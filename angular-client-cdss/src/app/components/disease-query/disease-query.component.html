@@ -1,0 +1,22 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="container" style="margin-top: 100px">
+  <h3>Selected symptoms:</h3>
+  <ul *ngFor="let s of data.info.symptoms">
+    <li>{{s}}</li>
+  </ul>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Disease Name</th>
+      </tr>
+    </thead>
+    <tbody *ngFor="let d of data.data;index as i">
+      <tr>
+        <th scope="row">{{i+1}}</th>
+        <td>{{d.name}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

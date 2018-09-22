@@ -7,7 +7,50 @@
       <h4>Query</h4>
     </div>
     <div class="card-body">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a [ngClass]="classDisease" (click)="toggleQuery('disease')">Disease</a>
+        </li>
+        <li class="nav-item">
+          <a [ngClass]="classSymptom" (click)="toggleQuery('symptoms')">Symptom</a>
+        </li>
+      </ul>
+      <br>
+      <div *ngIf="show=='disease'">
+        <select class="form-control" [(ngModel)]="selectedDisease" name="query">
+          <option *ngFor="let d of allDisease;index as i" [value]="d.id">{{d.name}}</option>
+        </select>
+        <br>
+        <button type="button" class="btn btn-primary" (click)="getSymptoms()">Get Symptoms</button>
+      </div>
+      <div *ngIf="show=='symptoms'">
+        <div class="row">
+          <div class="form-check" *ngFor="let symptom of allSymptoms;index as i">
+            <div *ngIf="colNum(i)" class="col">
+              <div class="form-group">
+                <input class="form-check-input" (change)="onChange(symptom.name, $event.target.checked)" name="{{ symptom.name }}"
+                  type="checkbox" id="{{symptom.name}}">
 
+                <label class="form-check-label" for="{{symptom.name}}">
+                  {{symptom.name}}
+                </label>
+              </div>
+            </div>
+            <div *ngIf="!colNum(i)" class="col">
+              <div class="form-group">
+                <input class="form-check-input" (change)="onChange(symptom.name, $event.target.checked)" name="{{ symptom.name }}"
+                  type="checkbox" id="{{symptom.name}}">
+
+                <label class="form-check-label" for="{{symptom.name}}">
+                  {{symptom.name}}
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <br>
+        <button type="button" class="btn btn-primary" (click)="getDiseases()">Get Diseases</button>
+      </div>
     </div>
   </div>
 </div>
