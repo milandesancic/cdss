@@ -1,0 +1,71 @@
+<app-nav-bar></app-nav-bar>
+
+<div class="container" style="margin-top: 100px">
+  <div class="card">
+    <div class="card-header">
+      <h4>Patient</h4>
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group row">
+          <label for="inputPatientID" class="col-sm-2 col-form-label">Patient First Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPatientFName" placeholder="First Name" [(ngModel)]="firstName" name="firstName">
+          </div>
+        </div>
+        <div class="form-group row">
+          <label for="inputPatientID" class="col-sm-2 col-form-label">Patient Last Name</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="inputPatientLName" placeholder="Last Name" [(ngModel)]="lastName" name="lastName">
+          </div>
+        </div>
+        <hr>
+        <h2>Allergies:</h2>
+        <br>
+        <div class="row">
+          <div class="col">
+            <div class="card" style="padding-top: 5px;padding-left: 5px">
+              <div class="card-box">
+                <div class="card-title">
+                  <h4>Medicine</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-check" *ngFor="let medicine of allMedicine">
+                    <div class="form-group row" style="margin-left:10px">
+                      <input class="form-check-input" (change)="onChangeMedicine(medicine.name, $event.target.checked)"
+                        name="{{ medicine.name }}" type="checkbox" id="{{medicine.name}}">
+                      <label class="form-check-label" for="{{medicine.name}}">
+                        {{medicine.name}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card" style="padding-top: 5px;padding-left: 5px">
+              <div class="card-box">
+                <div class="card-title">
+                  <h4>Medicine components</h4>
+                </div>
+                <div class="card-body">
+                  <div class="form-check" *ngFor="let medicineComponent of allMedicineComponent">
+                    <div class="form-group row" style="margin-left:10px">
+                      <input class="form-check-input" (change)="onChangeMedicineComponent(medicineComponent.name, $event.target.checked)"
+                        name="{{ medicineComponent.name }}" type="checkbox" id="{{medicineComponent.name}}">
+                      <label class="form-check-label" for="{{medicineComponent.name}}">
+                        {{medicineComponent.name}}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-primary" (click)="collectData()">Add Patient</button>
+      </form>
+    </div>
+  </div>
+</div>

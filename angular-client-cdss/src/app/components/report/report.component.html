@@ -1,0 +1,37 @@
+<app-nav-bar></app-nav-bar>
+
+
+<div class="container" style="margin-top: 100px">
+  <div *ngIf='!showTable' class="card">
+    <div class="card-header">
+      <h4>Report</h4>
+    </div>
+    <div class="card-body">
+      <select class="form-control" [(ngModel)]="selectedReport" name="report">
+        <option [value]="1">Patients With Chronic</option>
+        <option [value]="2">Patient Addicts</option>
+        <option [value]="3">Patients With Weak Immunity</option>
+      </select>
+      <br>
+      <button type="button" class="btn btn-primary" (click)="getReport()">Get Report</button>
+    </div>
+  </div>
+  <div *ngIf='showTable'>
+    <table class="table">
+        <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First Name</th>
+              <th scope="col">Last Name</th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let p of reportData;index as i">
+            <tr>
+                          <th scope="row">{{i+1}}</th>
+            <td>{{p.name}}</td>
+            <td>{{p.lastName}}</td>
+          </tr>
+          </tbody>
+    </table>
+  </div>
+</div>

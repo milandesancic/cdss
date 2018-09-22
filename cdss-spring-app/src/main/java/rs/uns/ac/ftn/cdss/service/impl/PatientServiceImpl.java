@@ -13,11 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import rs.uns.ac.ftn.cdss.CdssSpringAppApplication;
+import rs.uns.ac.ftn.cdss.dto.PatientDto;
 import rs.uns.ac.ftn.cdss.model.Disease;
 import rs.uns.ac.ftn.cdss.model.Medicine;
+import rs.uns.ac.ftn.cdss.model.MedicineComponent;
 import rs.uns.ac.ftn.cdss.model.MedicineType;
 import rs.uns.ac.ftn.cdss.model.Patient;
 import rs.uns.ac.ftn.cdss.model.util.DateChecker;
+import rs.uns.ac.ftn.cdss.repository.MedicineComponentRepository;
 import rs.uns.ac.ftn.cdss.repository.MedicineRepository;
 import rs.uns.ac.ftn.cdss.repository.PatientRepository;
 import rs.uns.ac.ftn.cdss.service.PatientService;
@@ -30,6 +33,9 @@ public class PatientServiceImpl implements PatientService {
 
 	@Autowired
 	MedicineRepository medicineRepository;
+	
+	@Autowired
+	MedicineComponentRepository medicineComponentRepository;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -134,6 +140,22 @@ public class PatientServiceImpl implements PatientService {
 			if (!object.getClass().equals(Disease.class))
 				kieSession.delete(kieSession.getFactHandle(object));
 		}
+	}
+
+	@Override
+	public Patient addNew(PatientDto newPatient) {
+		Patient p = new Patient(newPatient);
+		
+		for(Medicine m: newPatient.getMedicineAllergies()) {
+			p.getMedicineAllergies().add(medicineRepository.findByName(m.getName()));
+		}
+		
+		for(MedicineComponent mc: newPatient.getComponentAllergies()) {
+			p.getComponentAllergies().add(medicineComponentRepository.findByName(mc.getName()));
+		}
+		
+		p.setId(0L);
+		return patientRepository.save(p);
 	}
 
 }

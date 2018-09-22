@@ -14,12 +14,14 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import rs.uns.ac.ftn.cdss.dto.PatientDto;
+
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Patient {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false,name="first_name")
@@ -38,6 +40,15 @@ public class Patient {
 
 	public Patient() {
 
+	}
+	
+	public Patient(PatientDto p) {
+		this.name = p.getFirstName();
+		this.lastName = p.getLastName();
+		this.patientHistory = new HashSet<>();
+		this.componentAllergies = new HashSet<>();
+		this.medicineAllergies = new HashSet<>();
+		
 	}
 
 	public Patient(long l, String name) {

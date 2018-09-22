@@ -12,6 +12,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { TokenInterceptorService } from './service/token-interceptor.service';
 import { DiagnoseComponent } from './components/diagnose/diagnose.component';
+import { PatientComponent } from './components/patient/patient.component';
+import { QueryComponent } from './components/query/query.component';
+import { ReportComponent } from './components/report/report.component';
+import { ReportDetailsComponent } from './components/report-details/report-details.component';
 
 
 const appRoutes: Routes = [
@@ -22,7 +26,11 @@ const appRoutes: Routes = [
   },
   { path: 'login', component: AuthenticationComponent, canActivate: [AlreadyLoggedInGuard] },
   { path: 'home', component: HomeComponent, canActivate: [OnlyLoggedInGuard] },
-  { path: 'diagnose', component: DiagnoseComponent, canActivate: [OnlyLoggedInGuard] }
+  { path: 'diagnose', component: DiagnoseComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'patient', component: PatientComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'query', component: QueryComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'report', component: ReportComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'report/details', component: ReportDetailsComponent, canActivate: [OnlyLoggedInGuard] }
 ];
 
 
@@ -32,8 +40,11 @@ const appRoutes: Routes = [
     AuthenticationComponent,
     HomeComponent,
     NavBarComponent,
-    DiagnoseComponent
-
+    DiagnoseComponent,
+    PatientComponent,
+    QueryComponent,
+    ReportComponent,
+    ReportDetailsComponent
   ],
   imports: [
     BrowserModule,
