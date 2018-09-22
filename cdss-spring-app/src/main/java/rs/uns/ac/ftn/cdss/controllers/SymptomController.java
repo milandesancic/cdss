@@ -30,6 +30,11 @@ public class SymptomController {
 	@Autowired
 	HttpServletRequest httpServetRequest;
 	
+	@GetMapping
+	public ResponseEntity<?>getAllSymptoms(){
+		return new ResponseEntity<>(symptomService.getAllSymptoms(),HttpStatus.OK);
+	}
+	
 	@GetMapping(value="/get_by_disease/{id}")
 	public ResponseEntity<?> getSymptoms(@PathVariable Long id){
 		String username = tokenUtils.getUsernameFromToken(httpServetRequest.getHeader("Bearer"));

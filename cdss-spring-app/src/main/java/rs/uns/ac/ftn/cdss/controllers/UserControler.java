@@ -56,6 +56,11 @@ public class UserControler {
 	}
 
 	//TODO: Logout
+	@GetMapping("/logout")
+	public Boolean logout(){
+		String username = this.tokeUtils.getUsernameFromToken(this.httpServetRequest.getHeader("Bearer"));
+		return this.userService.logout(username);
+	}
 
 	@GetMapping
 	public void printUsername() {

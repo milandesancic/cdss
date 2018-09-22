@@ -8,7 +8,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from './components/home/home.component';
 import { OnlyLoggedInGuard } from './guards/only-logged-in.guard';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NavBarComponent } from './components/nav-bar/nav-bar.component';
+import { TokenInterceptorService } from './service/token-interceptor.service';
+import { DiagnoseComponent } from './components/diagnose/diagnose.component';
 
 
 const appRoutes: Routes = [
@@ -17,8 +20,9 @@ const appRoutes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
-  { path: 'login', component: AuthenticationComponent},
-  {path:'home',component:HomeComponent}
+  { path: 'login', component: AuthenticationComponent, canActivate: [AlreadyLoggedInGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [OnlyLoggedInGuard] },
+  { path: 'diagnose', component: DiagnoseComponent, canActivate: [OnlyLoggedInGuard] }
 ];
 
 
@@ -26,7 +30,9 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     AuthenticationComponent,
-    HomeComponent
+    HomeComponent,
+    NavBarComponent,
+    DiagnoseComponent
 
   ],
   imports: [
@@ -38,7 +44,15 @@ const appRoutes: Routes = [
       appRoutes,
     ),
   ],
-  providers: [],
+  providers: [
+    OnlyLoggedInGuard,
+    AlreadyLoggedInGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

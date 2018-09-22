@@ -14,4 +14,8 @@ export class AuthenticationService {
     headers.append('Content-Type', 'application/json');
     return this.http.post('/api/users/login', credentials, { headers : headers });
   }
+
+  logout(){
+    return this.http.get("/api/users/logout");
+  }
 }

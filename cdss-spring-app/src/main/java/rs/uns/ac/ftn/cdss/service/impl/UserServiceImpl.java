@@ -82,4 +82,12 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public Boolean logout(String username) {
+		//Izbaciti sesiju iz mape
+		
+		CdssSpringAppApplication.kieSessions.remove(username);
+		return true;
+	}
+
 }

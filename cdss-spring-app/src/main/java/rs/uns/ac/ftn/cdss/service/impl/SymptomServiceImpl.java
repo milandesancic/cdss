@@ -77,4 +77,9 @@ public class SymptomServiceImpl implements SymptomService {
 
 	}
 
+	@Override
+	public Collection<Symptom> getAllSymptoms() {
+		return symptomRepository.findAll();
+	}
+
 }

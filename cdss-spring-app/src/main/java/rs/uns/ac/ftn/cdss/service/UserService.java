@@ -7,4 +7,5 @@ public interface UserService {
 
 	public User getByUsername(String username);
 	public Boolean login(AuthenticationRequestDto user);
+	public Boolean logout(String username);
 }
