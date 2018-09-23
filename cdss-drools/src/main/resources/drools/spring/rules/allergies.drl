@@ -1,0 +1,37 @@
+package drools.spring.rules
+
+import rs.uns.ac.ftn.cdss.model.*;
+import rs.uns.ac.ftn.cdss.model.util.*;
+import java.util.*;
+
+global Long pId;
+
+agenda-group "allergies"
+
+rule "Check if patient is allergic to some medicine"
+	when
+		$medicine : Medicine( $mName: name )
+		$allergies: Patient( id == pId, $mAllergies: medicineAllergies)
+		Number(intValue >= 1) from accumulate (
+			$found: Medicine( name == $mName ) from $mAllergies,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		)
+	then
+	insert($medicine.getName());
+end
+
+rule "Check if patient is allergic to some component of a medicine"
+	when
+		$component: MedicineComponent( $cName: name)
+		$allergies: Patient( id == pId, $cAllergies: componentAllergies)
+		Number(intValue >= 1) from accumulate (
+			$found: MedicineComponent( name == $cName ) from $cAllergies,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		)
+	then
+	insert($component.getName());
+end

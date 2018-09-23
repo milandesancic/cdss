@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Medicine {
@@ -30,9 +29,6 @@ public class Medicine {
 
 	@Enumerated(EnumType.STRING)
 	private MedicineType medicineType;
-
-	@ManyToOne
-	private User doctor;
 
 	public Medicine() {
 
@@ -70,12 +66,5 @@ public class Medicine {
 		this.name = name;
 	}
 
-	public User getDoctor() {
-		return doctor;
-	}
-
-	public void setDoctor(User doctor) {
-		this.doctor = doctor;
-	}
 
 }

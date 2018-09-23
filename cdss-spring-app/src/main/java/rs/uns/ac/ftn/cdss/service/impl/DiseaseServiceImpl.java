@@ -40,7 +40,7 @@ public class DiseaseServiceImpl implements DiseaseService {
 	DiseaseRepository diseaseRepository;
 
 	@Override
-	public Record getDiseaseBySymptoms(Long id, ArrayList<Symptom> symptoms, String username) {
+	public Disease getDiseaseBySymptoms(Long id, ArrayList<Symptom> symptoms, String username) {
 
 		// Iz mape kie sesijadobavi onu koja pripada ulogovanom doktoru
 		KieSession kieSession = CdssSpringAppApplication.kieSessions.get(username);
@@ -50,7 +50,9 @@ public class DiseaseServiceImpl implements DiseaseService {
 
 		// Pokusaj da nadjes pacijenta
 		Patient patient = patientRepository.getOne(id);
-				
+		if(patient==null) {
+			return null;
+		}
 		kieSession.insert(patient);
 
 		Collection<Record> patientRecord = patient.getPatientHistory();
@@ -73,11 +75,9 @@ public class DiseaseServiceImpl implements DiseaseService {
 
 		release(kieSession);
 		if (newRecord.getDisease() != null) {
-			System.err.println("Pronasli smo bolest: ");
-			System.err.println(newRecord.getDisease().toString());
+			System.out.println(newRecord.getDisease().toString());
 		}
-		// TODO Auto-generated method stub
-		return newRecord;
+		return newRecord.getDisease();
 	}
 	
 

@@ -3,12 +3,12 @@ package rs.uns.ac.ftn.cdss.dto;
 public class SymptomDto {
 
 	private String name;
-	private String value;
+	private int value;
 
 	public SymptomDto() {
 	}
 
-	public SymptomDto(String name, String value) {
+	public SymptomDto(String name, int value) {
 		super();
 		this.name = name;
 		this.value = value;
@@ -22,11 +22,11 @@ public class SymptomDto {
 		this.name = name;
 	}
 
-	public String getValue() {
+	public int getValue() {
 		return value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(int value) {
 		this.value = value;
 	}
 

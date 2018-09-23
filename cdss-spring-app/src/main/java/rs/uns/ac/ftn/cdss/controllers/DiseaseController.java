@@ -40,8 +40,12 @@ public class DiseaseController {
 	@PostMapping("/get_by_symptoms/{id}")
 	public ResponseEntity<?> getDisaseBySymptoms(@PathVariable Long id, @RequestBody ArrayList<Symptom> symptoms){
 		String username = tokenUtils.getUsernameFromToken(httpServetRequest.getHeader("Bearer"));
-		diseaseService.getDiseaseBySymptoms(id, symptoms, username);
-		return null;
+		Disease d = diseaseService.getDiseaseBySymptoms(id, symptoms, username);
+		if(d==null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			return new ResponseEntity<>(d,HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping("/get_by_symptoms")

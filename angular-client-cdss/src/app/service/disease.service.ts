@@ -15,4 +15,12 @@ export class DiseaseService {
   getBySymptoms(data){
     return this.http.post('/api/diseases/get_by_symptoms',data);
   }
+
+  getPossibleDisease(id,reqData){
+    return this.http.post(`/api/diseases/get_by_symptoms/${id}`,reqData);
+  }
+
+  makeDiagnose(id,reqData){
+    return this.http.post(`/api/doctor/patient/${id}`,reqData);
+  }
 }
