@@ -1,0 +1,81 @@
+package drools.spring.rules
+
+
+import rs.uns.ac.ftn.cdss.model.*;
+import rs.uns.ac.ftn.cdss.model.util.*;
+import rs.uns.ac.ftn.cdss.event.*;
+import java.util.*;
+
+
+agenda-group "monitoring"
+
+rule "Problem sa kiseonikom"
+	agenda-group "oxygen"
+	lock-on-active true
+	when
+ 		$oxEvent: OxygenEvent($patient : patient, $time : executionTime, $ol : oxygenLevel, oxygenLevel<70)
+        not(
+        	//U roku od 15m treba da postoji event istog pacijenta na kojem nije zabelezen porast kiseonika
+            OxygenEvent(this != $oxEvent, patient == $patient, oxygenLevel>$ol) 
+            over window:time(15m)
+        )
+    then
+    	System.out.println("Event:");
+        insert(new OxygenLevelNotGoodEvent($patient, "In the past 15 minutes the oxygen level of a patient "+$patient.getName()+" hasn't been increasing, and the oxygen level is less then 70mmHg. "));
+        drools.halt();
+end
+
+
+rule "Ubrzan srcani ritam"
+	agenda-group "heartbeats"
+	lock-on-active true
+	when
+ 		$hbEvent: HeartbeatEvent($patient : patient, $time : executionTime)
+        list : List(size>25) from accumulate(
+        	//Pokupi sve evente istog pacijenta u roku od 10 sec
+            $hbe:HeartbeatEvent(this != $hbEvent && patient==$patient)
+            over window:time(10s),
+            collectList($hbe)
+        )
+        
+    then
+    	System.out.println("Event:");    	
+        insert(new HeartbeatNotGoodEvent($patient, "In the past 10 seconds patient "+$patient.getName()+" has more then 25 heartbeats. "));
+        drools.halt();
+end
+
+rule "Hitno potrebna dijaliza"
+	agenda-group "dialysis"
+	lock-on-active true
+	when
+		$hbEvent: HeartbeatEvent($patient : patient, $time : executionTime)
+		
+		list : List(size>=1) from accumulate (
+		$mr : Record(disease.name=="Hronicna bubrezna bolest") from $patient.getPatientHistory(),
+		collectList($mr))
+		
+        Number(intValue>10) from accumulate(
+            $hbe:HeartbeatEvent(this != $hbEvent, patient == $patient)
+            over window:time(10s),
+            count($hbe)
+        )
+        
+        $urinating: UrinatingEvent($patient==patient, $initAmount:amount)
+        
+        Number(intValue < 100) from accumulate(
+			$urin: UrinatingEvent(
+				this != $urinating,
+				patient == $patient,
+				$amount: amount,
+				this meets[12h] $urinating
+			),
+			init(int count = $initAmount;),
+			action(count += $amount;),
+			result(count)
+		)
+       
+	then
+		System.out.println("Evnet:");
+        insert(new DialysisImmediatelyEvent($patient, "Patient "+$patient.getName()+" needs dialysis immediately"));
+        drools.halt();
+end

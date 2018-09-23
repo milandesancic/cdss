@@ -50,7 +50,7 @@
                   <label class="form-check-label" for="{{symptom.name}}">
                     {{symptom.name}}
                   </label>
-                  <input *ngIf="symptom.name=='Temperatura'" class="form-control" type="number" [(ngModel)]="tempVal" name="tempVal">
+                  <input *ngIf="symptom.name=='Temperatura'" class="form-control" type="number" placeholder="Temp" [(ngModel)]="tempVal" name="tempVal" style="margin-left: 4px">
                 </div>
                 <div class="input-group" *ngIf="symptom.name!='Temperatura'">
                   <input class="form-check-input" (change)="onChangeS(symptom.name, $event.target.checked)" name="{{ symptom.name }}"
@@ -63,7 +63,7 @@
               </div>
             </div>
           </div>
-          <button type="button" class="btn btn-primary" (click)="open(content)">Pick Disease</button>
+          <button type="button" class="btn btn-primary" (click)="open(content)" style="margin-right: 5px">Pick Disease</button>
           <button type="button" class="btn btn-primary" (click)="getDisease()">Get Most Likely Disease</button>
         </div>
       </form>
