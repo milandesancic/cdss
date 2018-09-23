@@ -65,7 +65,7 @@ public class DateChecker {
 		cal.setTime(now);
 		cal.add(Calendar.MONTH, -6);
 		Date res = cal.getTime();
-
+//		System.out.println(res);
 		return res;
 	}
 

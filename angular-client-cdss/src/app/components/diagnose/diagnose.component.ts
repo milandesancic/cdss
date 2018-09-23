@@ -73,6 +73,8 @@ export class DiagnoseComponent implements OnInit {
         reqData.push({ 'name': p });
       }
     }
+    console.log(this.patientID);
+    console.log(reqData);
     this.diseaseService.getPossibleDisease(this.patientID, reqData).subscribe(
       data => {
         console.log(data);

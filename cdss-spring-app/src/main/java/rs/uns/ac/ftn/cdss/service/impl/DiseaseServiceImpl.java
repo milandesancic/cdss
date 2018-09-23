@@ -57,6 +57,8 @@ public class DiseaseServiceImpl implements DiseaseService {
 
 		Collection<Record> patientRecord = patient.getPatientHistory();
 		for (Record r : patientRecord) {
+//			System.out.println(r.getDate());
+//			System.out.println(r.getDisease());
 			kieSession.insert(r);
 		}
 

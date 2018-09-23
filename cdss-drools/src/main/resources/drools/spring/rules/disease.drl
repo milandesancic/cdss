@@ -219,7 +219,7 @@ rule "Hronicna bubrezna bolest"
 		(
 			//boluje od hipertenzije vise od 6 mj
 			Number(intValue >= 1) from accumulate(
-				Record($dc.moreThan6Months()>date, disease == $hypertension) from $patientHistory,
+				Record($dc.moreThan6Months()>date, disease.name == $hypertension.name) from $patientHistory,
 				init(int count = 0;),
 				action(count++;),
 				result(count)		
@@ -227,7 +227,7 @@ rule "Hronicna bubrezna bolest"
 			or 
 			// boluje od dijabetesa
 			Number(intValue >= 1) from accumulate(
-				Record(disease == $diabetes) from $patientHistory,
+				Record(disease.name == $diabetes.name) from $patientHistory,
 				init(int count = 0;),
 				action(count++;),
 				result(count)

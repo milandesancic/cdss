@@ -21,7 +21,7 @@ rule "Problem sa kiseonikom"
         )
     then
     	System.out.println("Event:");
-        insert(new OxygenLevelNotGoodEvent($patient, "In the past 15 minutes the oxygen level of a patient "+$patient.getName()+" hasn't been increasing, and the oxygen level is less then 70mmHg. "));
+        insert(new OxygenLevelNotGoodEvent($patient, "U zadnjih 15 minuta nisu zabelezeni porasti kiseonika"));
         drools.halt();
 end
 
@@ -40,7 +40,7 @@ rule "Ubrzan srcani ritam"
         
     then
     	System.out.println("Event:");    	
-        insert(new HeartbeatNotGoodEvent($patient, "In the past 10 seconds patient "+$patient.getName()+" has more then 25 heartbeats. "));
+        insert(new HeartbeatNotGoodEvent($patient, "U 10 sekundi pacijent "+$patient.getName()+"imao vise od 25 otkucaja srca"));
         drools.halt();
 end
 
@@ -54,6 +54,7 @@ rule "Hitno potrebna dijaliza"
 		$mr : Record(disease.name=="Hronicna bubrezna bolest") from $patient.getPatientHistory(),
 		collectList($mr))
 		
+		//Treba da postoji 10 eventa otkucaj srca u roku od 10 sekundi
         Number(intValue>10) from accumulate(
             $hbe:HeartbeatEvent(this != $hbEvent, patient == $patient)
             over window:time(10s),
@@ -62,6 +63,7 @@ rule "Hitno potrebna dijaliza"
         
         $urinating: UrinatingEvent($patient==patient, $initAmount:amount)
         
+        //Saberi sve kolcine mokrace u poslednjih 12 sati
         Number(intValue < 100) from accumulate(
 			$urin: UrinatingEvent(
 				this != $urinating,
@@ -76,6 +78,6 @@ rule "Hitno potrebna dijaliza"
        
 	then
 		System.out.println("Evnet:");
-        insert(new DialysisImmediatelyEvent($patient, "Patient "+$patient.getName()+" needs dialysis immediately"));
+        insert(new DialysisImmediatelyEvent($patient, "Potrebna hitna dijaliza"));
         drools.halt();
 end

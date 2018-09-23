@@ -20,7 +20,7 @@ export class NavBarComponent implements OnInit {
   logout(){
     this.authenticationService.logout().subscribe(
       data => {
-        console.log(data);
+        // console.log(data);
         LoggedUtils.clearLocalStorage();
         this.roter.navigate(['/login']);
       }
