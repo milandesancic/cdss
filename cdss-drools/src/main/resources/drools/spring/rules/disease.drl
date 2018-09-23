@@ -192,3 +192,129 @@ rule "Dijabetes"
 
 end
 
+/**TRECA KATEGORIJA**/
+
+rule "Hronicna bubrezna bolest"
+	when
+		$dc : DateChecker() 
+		$d: Disease(name == "Hronicna bubrezna bolest")
+		$hypertension: Disease(name == "Hipertenzija")
+		$diabetes: Disease(name == "Dijabetes")
+		$patient: Patient($patientHistory: patientHistory)
+		$mr: Record($symptoms: symptoms, disease == null)
+		
+		// 2+ generalnih simptoma
+		Number(intValue >= 2) from accumulate(
+			Symptom(name == "Zamor"
+				 || name == "Nocturia"
+				 || name == "Otoci nogu i zglobova"
+				 || name == "Gusenje"
+				 || name == "Bol u grudima") from $symptoms,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		
+		)
+		and
+		(
+			//boluje od hipertenzije vise od 6 mj
+			Number(intValue >= 1) from accumulate(
+				Record($dc.moreThan6Months()>date, disease == $hypertension) from $patientHistory,
+				init(int count = 0;),
+				action(count++;),
+				result(count)		
+			)
+			or 
+			// boluje od dijabetesa
+			Number(intValue >= 1) from accumulate(
+				Record(disease == $diabetes) from $patientHistory,
+				init(int count = 0;),
+				action(count++;),
+				result(count)
+			)
+		)
+		
+	then
+		modify($mr) {setDisease($d);}
+		System.out.println("Hronicna bubrezna bolest");
+end
+
+rule "Akutna bubrezna povreda"
+	when
+		$dc : DateChecker() 
+		$d: Disease(name == "Akutna bubrezna povreda")
+		$patient : Patient(  $patientHistory : patientHistory )
+		$mr:Record($symptoms: symptoms, disease == null)
+			
+		// 2+ generalnih simptoma
+		Number(intValue >= 2) from accumulate(
+			Symptom(name == "Zamor"
+				 || name == "Gusenje"
+				 || name == "Otoci nogu i zglobova"
+				 || name == "Dijareja") from $symptoms,
+			init(int count = 0;),
+			action(count++;),
+			result(count)
+		)
+		and 
+		(
+			// oporavak od peracjie
+            ( 
+                Number(intValue >= 1) from accumulate(
+                			Symptom(name == "Oporavak od operacije") from $symptoms,
+                			init(int count = 0;),
+                			action(count++;),
+                			reverse(count--;),
+                			result(count)
+                		)
+            )            
+            or (
+            //zadnjih 14 dana dijagnostikovana bolest koja je kao simpom imala povisenu temp
+            
+            	//svi simptomi od zadnjih 14 dana
+				$past14DaysSymptoms: List() from accumulate(
+					Record($dc.last14Days()<date, $pasDis: disease != null) from $patientHistory,
+					init(List pasSymps = new ArrayList<>(); ),
+					action(pasSymps.addAll($pasDis.getSymptoms());),
+					result(pasSymps)
+				)
+				and
+				Number(intValue >= 1) from accumulate(
+					Symptom(name == "Temperatura") from $past14DaysSymptoms,
+					init(int count = 0;),
+					action(count++;),
+					result(count)
+				)
+            )		
+            or
+            //koristio antibiotike u zadnjih 21 dan
+            (
+            	// svi lekovi iz zadnih 21 dan
+            	$past: List() from accumulate(
+            		Record($dc.last21Days()<date, disease != null, $pastDrugs: medicine) from $patientHistory,
+            		init(List pastDrugs = new ArrayList<>();),
+            		action(pastDrugs.addAll($pastDrugs);),
+            		result(pastDrugs)
+            	)
+            	and
+            	Number(intValue >= 1) from accumulate(
+            		Medicine(medicineType==MedicineType.ANTIBIOTIC) from $past,
+            		init(int count = 0;),
+            		action(count++;),
+            		result(count)
+            	)
+            
+            ) 
+            
+		)	
+	
+	then
+		modify($mr) {setDisease($d);}
+		System.out.println("Akutna bubrezna povreda");	
+end
+
+
+
+
+
+
