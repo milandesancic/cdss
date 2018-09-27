@@ -37,6 +37,12 @@ public class DiseaseController {
 		return new ResponseEntity<>(this.diseaseService.getAll(),HttpStatus.OK);
 	}
 	
+	@PostMapping
+	public ResponseEntity<?> create(@RequestBody Disease d){
+		String username = tokenUtils.getUsernameFromToken(httpServetRequest.getHeader("Bearer"));
+		return new ResponseEntity<>(diseaseService.create(d,username),HttpStatus.CREATED);
+	}
+	
 	@PostMapping("/get_by_symptoms/{id}")
 	public ResponseEntity<?> getDisaseBySymptoms(@PathVariable Long id, @RequestBody ArrayList<Symptom> symptoms){
 		String username = tokenUtils.getUsernameFromToken(httpServetRequest.getHeader("Bearer"));

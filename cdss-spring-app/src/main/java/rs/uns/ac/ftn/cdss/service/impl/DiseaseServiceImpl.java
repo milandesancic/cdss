@@ -20,11 +20,14 @@ import rs.uns.ac.ftn.cdss.model.Disease;
 import rs.uns.ac.ftn.cdss.model.Patient;
 import rs.uns.ac.ftn.cdss.model.Record;
 import rs.uns.ac.ftn.cdss.model.Symptom;
+import rs.uns.ac.ftn.cdss.model.User;
+import rs.uns.ac.ftn.cdss.model.UserRole;
 import rs.uns.ac.ftn.cdss.model.util.DateChecker;
 import rs.uns.ac.ftn.cdss.model.util.SalienceChecker;
 import rs.uns.ac.ftn.cdss.repository.DiseaseRepository;
 import rs.uns.ac.ftn.cdss.repository.PatientRepository;
 import rs.uns.ac.ftn.cdss.repository.SymptomRepository;
+import rs.uns.ac.ftn.cdss.repository.UserRepository;
 import rs.uns.ac.ftn.cdss.service.DiseaseService;
 
 @Service
@@ -38,6 +41,9 @@ public class DiseaseServiceImpl implements DiseaseService {
 	
 	@Autowired
 	DiseaseRepository diseaseRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 
 	@Override
 	public Disease getDiseaseBySymptoms(Long id, ArrayList<Symptom> symptoms, String username) {
@@ -126,6 +132,21 @@ public class DiseaseServiceImpl implements DiseaseService {
 	@Override
 	public List<Disease> getAll() {
 		return this.diseaseRepository.findAll();
+	}
+
+
+	@Override
+	public Disease create(Disease d, String username) {
+		User u = userRepository.getByUsername(username);
+		if(u.getRole()!=UserRole.ADMIN)
+			return null;
+		
+		Disease created = this.diseaseRepository.save(d);
+		for(KieSession ks: CdssSpringAppApplication.kieSessions.values()) {
+			ks.insert(created);
+		}
+		return created; 
+		
 	}
 
 

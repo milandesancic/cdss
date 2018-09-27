@@ -14,6 +14,7 @@ public interface DiseaseService {
 	
 	public List<Disease> getAll();
 	
+	public Disease create(Disease d, String username);
 	
 
 }
